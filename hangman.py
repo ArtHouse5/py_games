@@ -10,6 +10,8 @@ def gen_word(): #choose randomly the word
 
 def guess_letter(): #handle user's input
     user_input = input('Try to guess the letter: ')
+    if len(user_input) > 1 or not user_input.isalpha():
+        raise ValueError('Incorrect input')
     return user_input
 
 def initial_stat(word): #initial status of every letter in the word
@@ -49,14 +51,18 @@ def main():
     errors = 0
 
     while not game_over(statuses,errors):
-        print_word(word,statuses)
-        print('Errors left: ', MAX_ERRORS - errors)
-        letter = guess_letter()
-        result = perform_action(word,statuses,letter)
-        if not result:
-            errors+=1
+        try:
+            print_word(word,statuses)
+            print('Errors left: ', MAX_ERRORS - errors)
+            letter = guess_letter()
+            result = perform_action(word,statuses,letter)
+            if not result:
+                errors+=1
+        except ValueError as v:
+            print('Ooops, ',v)
     if errors >= MAX_ERRORS:
         print('You lose!')
+        print('The correct word was: ', word)
     else:
         print('You win! ')
 
